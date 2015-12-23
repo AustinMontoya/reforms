@@ -1,0 +1,36 @@
+{
+  "name": "reforms",
+  "version": "0.0.0",
+  "description": "stateless controls for react",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grrizzly/reforms.git"
+  },
+  "keywords": [
+    "react",
+    "forms",
+    "components"
+  ],
+  "author": "Austin Montoya",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/grrizzly/reforms/issues"
+  },
+  "homepage": "https://github.com/grrizzly/reforms#readme",
+  "devDependencies": {
+    "babel": "^6.3.13",
+    "babel-core": "^6.3.21",
+    "babel-loader": "^6.2.0",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "react": "^0.14.3",
+    "react-dom": "^0.14.3",
+    "react-hot-loader": "^1.3.0",
+    "webpack": "^1.12.9",
+    "webpack-dev-server": "^1.14.0"
+  }
+}
