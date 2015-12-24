@@ -13,11 +13,13 @@ const TextArea = (props) => (
   </ControlContainer>
 );
 
-TextArea.propTypes = Object.assign({}, ControlContainer.propTypes, {
-  value: pt.string,
-  placeholder: pt.string,
-  onChange: pt.func,
-  onValueChange: pt.func
-})
+TextArea.propTypes = Object.assign({}, ControlContainer.propTypes,
+  Object.freeze({
+    value: pt.string,
+    placeholder: pt.string,
+    onChange: pt.func,
+    onValueChange: pt.func
+  })
+);
 
 export default TextArea;
