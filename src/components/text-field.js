@@ -1,5 +1,6 @@
 import React from 'react'
 import ControlContainer from './control-container'
+import handleChange from '../utils/handle-change'
 
 const { PropTypes: pt } = React;
 
@@ -8,13 +9,7 @@ const TextField = (props) => (
     <input
       type="text"
       id={props.inputId}
-      onChange={(e) => {
-        if (props.onChange){
-          props.onChange(e);
-        } else if (props.onValueChange) {
-          props.onValueChange(e.target.value);
-        }
-      }}
+      onChange={handleChange(props)}
       value={props.value} />
   </ControlContainer>
 );
