@@ -1,5 +1,5 @@
 import React from 'react'
-import ControlContainer from './control-container'
+import ControlContainer from './control-container.jsx'
 import handleChange from '../utils/handle-change'
 
 const { PropTypes: pt } = React;

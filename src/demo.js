@@ -1,5 +1,6 @@
-import TextField from './components/text-field';
-import TextArea from './components/text-area';
+import TextField from './components/text-field.jsx';
+import TextArea from './components/text-area.jsx';
+import Checkbox from './components/checkbox.jsx';
 import ReactDOM from 'react-dom';
 import React from 'react';
 
@@ -12,6 +13,10 @@ let state = {
   },
   explanation: {
     value: "",
+    errorMessage: ""
+  },
+  agreement: {
+    checked: true,
     errorMessage: ""
   }
 };
@@ -38,6 +43,11 @@ const updateExplanation = (val) => {
   render();
 };
 
+const updateAgreement = (agrees) => {
+  state.agreement.checked = agrees;
+  state.agreement.errorMessage = agrees ? "" : "Ha! Like you really have a choice...";
+  render();
+}
 
 const render = () => (
   ReactDOM.render(
@@ -52,10 +62,15 @@ const render = () => (
       <TextArea
         label="Explain why you like this food"
         id="explanation"
-        placeholder="Don't be shy; tell us how you really feel..."
+        placeholder="Don't be shy; tell us how you really feel!"
         errorMessage={state.explanation.errorMessage}
         value={state.explanation.value}
         onValueChange={updateExplanation} />
+      <Checkbox
+        label="I agree to eat whatever you put on my plate."
+        checked={state.agreement.checked}
+        errorMessage={state.agreement.errorMessage}
+        onValueChange={updateAgreement} />
      </div>
   , appContainer)
 );
