@@ -1,6 +1,7 @@
 import TextField from './components/text-field.jsx';
 import TextArea from './components/text-area.jsx';
 import Checkbox from './components/checkbox.jsx';
+import Select from './components/select.jsx';
 import ReactDOM from 'react-dom';
 import React from 'react';
 
@@ -18,8 +19,23 @@ let state = {
   agreement: {
     checked: true,
     errorMessage: ""
+  },
+  protein: {
+    value: "",
+    errorMessage: ""
+  },
+  country: {
+    value: "UK"
   }
 };
+
+const typesOfProtein = ["chicken", "steak", "tofu", "pork", "legumes"];
+const countries = [
+  { displayText: "Pick one", value: "" },
+  { displayText: "Mexico", value: "MX" },
+  { displayText: "Italy", value: "IT" },
+  { displayText: "'Murica", value: "US" }
+]
 
 const updateFood = (val) => {
   state.food.value = val;
@@ -49,6 +65,17 @@ const updateAgreement = (agrees) => {
   render();
 }
 
+const updateProtein = (newProtein) => {
+  state.protein.value = newProtein;
+  render();
+}
+
+const updateCountry = (country) => {
+  state.country.value = country;
+  state.country.errorMessage = country ? "" : "You must pick sides.";
+  render();
+}
+
 const render = () => (
   ReactDOM.render(
     <div>
@@ -71,6 +98,17 @@ const render = () => (
         checked={state.agreement.checked}
         errorMessage={state.agreement.errorMessage}
         onValueChange={updateAgreement} />
+      <Select
+        label="Preferred protein"
+        options={typesOfProtein}
+        value={state.protein.value}
+        onValueChange={updateProtein} />
+      <Select
+        label="Favorite country for food"
+        options={countries}
+        value={state.country.value}
+        errorMessage={state.country.errorMessage}
+        onValueChange={updateCountry} />
      </div>
   , appContainer)
 );
