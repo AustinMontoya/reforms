@@ -8,14 +8,14 @@ const Checkbox = (props) => (
   <ControlContainer {...props}>
     <input
       type="checkbox"
-      checked={props.checked}
+      checked={props.value}
       onChange={({ target: { checked } }) => props.onValueChange(checked)} />
   </ControlContainer>
 );
 
 Checkbox.propTypes = Object.assign({}, ControlContainer.propTypes,
   Object.freeze({
-    checked: pt.bool,
+    value: pt.bool,
     onValueChange: pt.func
   })
 );

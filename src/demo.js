@@ -4,30 +4,25 @@ import Checkbox from './components/checkbox.jsx';
 import Select from './components/select.jsx';
 import ReactDOM from 'react-dom';
 import React from 'react';
+import Control from './control';
+import configureStore from './configure-store';
+import DevTools from './dev-tools.jsx';
 
 const appContainer = document.getElementById('app');
 
-let state = {
+let initialControlState = {
   food: {
-    value: "bacon",
-    errorMessage: ""
-  },
-  explanation: {
-    value: "",
-    errorMessage: ""
+    value: "bacon"
   },
   agreement: {
-    checked: true,
-    errorMessage: ""
-  },
-  protein: {
-    value: "",
-    errorMessage: ""
+    value: true
   },
   country: {
     value: "UK"
   }
 };
+
+let store = configureStore({controls: initialControlState});
 
 const typesOfProtein = ["chicken", "steak", "tofu", "pork", "legumes"];
 const countries = [
@@ -37,80 +32,82 @@ const countries = [
   { displayText: "'Murica", value: "US" }
 ]
 
-const updateFood = (val) => {
-  state.food.value = val;
-  if (val === "tempeh bacon") {
-    state.food.errorMessage = "Gross! Pick something else.";
-  } else {
-    state.food.errorMessage = "";
+function createChangeHandler(store, controlName) {
+  return (newValue) => {
+    store.dispatch({
+      type: 'REFORMS_CONTROL_VALUE_CHANGED',
+      name: controlName,
+      value: newValue
+    });
   }
-
-  render();
-};
-
-const updateExplanation = (val) => {
-  state.explanation.value = val;
-  if (val.length < 20) {
-    state.explanation.errorMessage = "You are holding back. Tell us more please.";
-  } else {
-    state.explanation.errorMessage = "";
-  }
-
-  render();
-};
-
-const updateAgreement = (agrees) => {
-  state.agreement.checked = agrees;
-  state.agreement.errorMessage = agrees ? "" : "Ha! Like you really have a choice...";
-  render();
 }
 
-const updateProtein = (newProtein) => {
-  state.protein.value = newProtein;
-  render();
+function createDirtyHandler(store, controlName) {
+  return () => {
+    store.dispatch({
+      type: 'REFORMS_CONTROL_SOILED',
+      name: controlName
+    });
+  }
 }
 
-const updateCountry = (country) => {
-  state.country.value = country;
-  state.country.errorMessage = country ? "" : "You must pick sides.";
-  render();
+function controlState(state, controlName, onChange) {
+  let {
+    valid: valid=true,
+    dirty: dirty=false,
+    value: value=null,
+    errors: errors=[]
+  } = state[controlName] || {};
+
+  return {
+    valid,
+    dirty,
+    value,
+    errorMessage: errors[0],
+    onValueChange: onChange
+  };
+}
+
+function storeControlState(controlName) {
+  return controlState(
+    store.getState(),
+    controlName,
+    createChangeHandler(store, controlName)
+  );
 }
 
 const render = () => (
   ReactDOM.render(
     <div>
-      <TextField
-        label="Favorite Food"
-        id="food"
-        placeholder="yum!"
-        errorMessage={state.food.errorMessage}
-        value={state.food.value}
-        onValueChange={updateFood} />
-      <TextArea
-        label="Explain why you like this food"
-        id="explanation"
-        placeholder="Don't be shy; tell us how you really feel!"
-        errorMessage={state.explanation.errorMessage}
-        value={state.explanation.value}
-        onValueChange={updateExplanation} />
-      <Checkbox
-        label="I agree to eat whatever you put on my plate."
-        checked={state.agreement.checked}
-        errorMessage={state.agreement.errorMessage}
-        onValueChange={updateAgreement} />
-      <Select
-        label="Preferred protein"
-        options={typesOfProtein}
-        value={state.protein.value}
-        onValueChange={updateProtein} />
-      <Select
-        label="Favorite country for food"
-        options={countries}
-        value={state.country.value}
-        errorMessage={state.country.errorMessage}
-        onValueChange={updateCountry} />
-     </div>
+      <div>
+        <TextField
+          label="Favorite Food"
+          id="food"
+          placeholder="yum!"
+          {...storeControlState('food')}
+        />
+        <TextArea
+          label="Explain why you like this food"
+          id="explanation"
+          placeholder="Don't be shy; tell us how you really feel!"
+          {...storeControlState('explanation')} />
+        <Checkbox
+          label="I agree to eat whatever you put on my plate."
+          {...storeControlState('agreement')} />
+        <Select
+          label="Preferred protein"
+          options={typesOfProtein}
+          {...storeControlState('protein')}/>
+        <Select
+          label="Favorite country for food"
+          options={countries}
+          {...storeControlState('country')} />
+       </div>
+       <DevTools store={store} />
+      </div>
   , appContainer)
 );
+
+store.subscribe(render);
 
 render();

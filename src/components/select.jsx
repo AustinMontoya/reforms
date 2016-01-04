@@ -14,7 +14,6 @@ const Select = (props) => (
   <ControlContainer {...props}>
     <select
       value={props.value}
-      placeholder={props.placeholder}
       onChange={handleChange(props)}>
       {props.options.map(renderOption)}
     </select>
