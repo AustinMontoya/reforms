@@ -7,22 +7,25 @@ import React from 'react';
 import Control from './control';
 import configureStore from './configure-store';
 import DevTools from './dev-tools.jsx';
+import Immutable from 'immutable';
 
 const appContainer = document.getElementById('app');
 
-let initialControlState = {
-  food: {
-    value: "bacon"
-  },
-  agreement: {
-    value: true
-  },
-  country: {
-    value: "UK"
+let initialState = Immutable.fromJS({
+  controls: {
+    food: {
+      value: "bacon"
+    },
+    agreement: {
+      value: true
+    },
+    country: {
+      value: "UK"
+    }
   }
-};
+});
 
-let store = configureStore({controls: initialControlState});
+let store = configureStore(initialState);
 
 const typesOfProtein = ["chicken", "steak", "tofu", "pork", "legumes"];
 const countries = [
@@ -57,7 +60,7 @@ function controlState(state, controlName, onChange) {
     dirty: dirty=false,
     value: value=null,
     errors: errors=[]
-  } = state[controlName] || {};
+  } = state;
 
   return {
     valid,
@@ -70,7 +73,7 @@ function controlState(state, controlName, onChange) {
 
 function storeControlState(controlName) {
   return controlState(
-    store.getState(),
+    store.getState().getIn(['controls', controlName], Immutable.Map()).toObject(),
     controlName,
     createChangeHandler(store, controlName)
   );
