@@ -9,14 +9,16 @@ const Checkbox = (props) => (
     <input
       type="checkbox"
       checked={props.value}
-      onChange={({ target: { checked } }) => props.onValueChange(checked)} />
+      onChange={({ target: { checked } }) => props.onValueChange(checked)}
+      onClick={props.onDirty} />
   </ControlContainer>
 );
 
 Checkbox.propTypes = Object.assign({}, ControlContainer.propTypes,
   Object.freeze({
     value: pt.bool,
-    onValueChange: pt.func
+    onValueChange: pt.func,
+    onDirty: pt.func
   })
 );
 

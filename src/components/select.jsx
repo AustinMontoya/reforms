@@ -14,7 +14,8 @@ const Select = (props) => (
   <ControlContainer {...props}>
     <select
       value={props.value}
-      onChange={handleChange(props)}>
+      onChange={handleChange(props)}
+      onBlur={props.onDirty}>
       {props.options.map(renderOption)}
     </select>
   </ControlContainer>
@@ -25,6 +26,7 @@ Select.propTypes = Object.assign({}, ControlContainer.propTypes,
     value: pt.string,
     onChange: pt.func,
     onValueChange: pt.func,
+    onDirty: pt.func,
     options: pt.arrayOf(
       pt.oneOfType([
         pt.string,

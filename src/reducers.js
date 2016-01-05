@@ -7,7 +7,7 @@ function mealGroup(state, action) {
 
   switch (action.type) {
     case 'REFORMS_CONTROL_SOILED':
-      state = state.setIn(['controls', controlName, 'dirty'], true);
+      state = state.setIn(['controls', action.name, 'dirty'], true);
       break;
     case 'REFORMS_CONTROL_VALUE_CHANGED':
       state = mealControl(state, action);
@@ -70,7 +70,7 @@ function reduceAgreement(_state, value) {
   return Map({value, errors});
 }
 
-const reduceProtein = (_state, value) => ({value, errors: []});
+const reduceProtein = (_state, value) => Map({value, errors: []});
 
 let reduceCountry = (_state, value) => {
   let errors = [];

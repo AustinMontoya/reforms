@@ -38,6 +38,7 @@
     "webpack-dev-server": "^1.14.0"
   },
   "dependencies": {
+    "classnames": "^2.2.3",
     "immutable": "^3.7.6",
     "kefir": "^3.2.0"
   }

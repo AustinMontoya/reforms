@@ -26,7 +26,7 @@ export function createReduxControlGroup(store, groupName, accessor) {
     })
   }
 
-  function getControlProps(name, dirtyEvent) {
+  function getControlProps(name, dirtyEventName) {
     let {
       valid: valid=true,
       dirty: dirty=false,
@@ -39,12 +39,10 @@ export function createReduxControlGroup(store, groupName, accessor) {
       dirty,
       value,
       errorMessage: errors[0],
+      dirtyEventName,
+      onDirty: () => onControlSoiled(name),
       onValueChange: (newVal) => onValueChange(name, newVal)
     };
-
-    if (dirtyEvent !== null) {
-      controlState[dirtyEvent] = () => onDirty(name);
-    }
 
     return controlState;
   }
