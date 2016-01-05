@@ -8,26 +8,13 @@ import Control from './control';
 import configureStore from './configure-store';
 import DevTools from './dev-tools.jsx';
 import Immutable from 'immutable';
-import {createReduxControlGroup, immutableAccessor} from './utils/control-utils';
+import * as mealGroup from './control-groups/meal';
 
 const appContainer = document.getElementById('app');
+const {getControlProps} = mealGroup;
 
-let initialState = Immutable.fromJS({
-  controls: {
-    food: {
-      value: "bacon"
-    },
-    agreement: {
-      value: true
-    },
-    country: {
-      value: "UK"
-    }
-  }
-});
-
-let store = configureStore(initialState);
-let { getControlProps } = createReduxControlGroup(store, 'meals', immutableAccessor);
+let store = configureStore(Immutable.fromJS(mealGroup.defaultState));
+mealGroup.connect(store);
 
 const typesOfProtein = ["chicken", "steak", "tofu", "pork", "legumes"];
 const countries = [
@@ -58,7 +45,7 @@ const render = () => (
         <Select
           label="Preferred protein"
           options={typesOfProtein}
-          {...getControlProps('protein')}/>
+          {...getControlProps('protein')} />
         <Select
           label="Favorite country for food"
           options={countries}

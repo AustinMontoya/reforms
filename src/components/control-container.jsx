@@ -3,9 +3,10 @@ import classnames from 'classnames';
 
 const { PropTypes: pt } = React;
 
-const getContainerClasses = (dirty) => classnames({
+const getContainerClasses = (dirty, valid) => classnames({
   'reforms-control': true,
-  'reforms-control-dirty': dirty
+  'reforms-control-dirty': dirty,
+  'reforms-control-invalid': !valid
 });
 
 const ControlContainer = ({
@@ -14,9 +15,10 @@ const ControlContainer = ({
   children,
   errorMessage,
   inputId,
-  dirty
+  dirty,
+  valid
 }) => (
-  <div className={getContainerClasses(dirty)}>
+  <div className={getContainerClasses(dirty, valid)}>
   { label &&
     <label htmlFor={inputId}>
       {label}
@@ -35,7 +37,8 @@ ControlContainer.propTypes = Object.freeze({
   label: pt.string,
   errorMessage: pt.string,
   inputId: pt.string,
-  dirty: pt.bool
+  dirty: pt.bool,
+  valid: pt.bool
 });
 
 export default ControlContainer;
