@@ -20,26 +20,79 @@ export function defaultAccessor(state, name) {
   return state.controls[name];
 }
 
-export function flow() {
-  var funcs = arguments;
-  return function(state) {
-    let index = 0;
-    let result = funcs[index].apply(this, arguments);
+export function chainReducers() {
+  let reducers = arguments;
+  return (state, action) => {
+    for (let i=0; i < reducers.length; i++) {
+      state = reducers[i](state, action);
+    }
 
-     while (++index < funcs.length) {
-       result = funcs[index].call(this, result);
-     }
-
-     return result;
+    return state;
   }
+}
+
+export function createControlsReducer(controlsMap, actionType = ActionTypes.REFORMS_CONTROL_VALUE_CHANGED) {
+  return (state, action) => {
+    if (action.type !== actionType)
+      return state;
+
+    if (!controlsMap[action.name])
+      return assignControlValue(state, action);
+
+    return controlsMap[action.name](state, action);
+  }
+}
+
+export function form(group, action) {
+  group = group.set('valid', isValid(group));
+  switch (action.type) {
+    case ActionTypes.REFORMS_CONTROL_SOILED:
+      group = markControlAsDirty(group, action);
+      group = group.set('dirty', true);
+      return group;
+    case ActionTypes.REFORMS_CONTROL_VALUE_CHANGED:
+      group = group.set('dirty', true);
+      return group;
+    default:
+      return group;
+  }
+}
+
+export function isValid(group) {
+  return group
+    .get('controls')
+    .filterNot((control) => control.get('valid'))
+    .size == 0;
+}
+
+export function assignControlValue(group, {name, value}) {
+  return group.setIn(['controls', name, 'value'], value);
+}
+
+export function markControlAsDirty(state, action) {
+  return state.setIn(['controls', action.name, 'dirty'], true);
 }
 
 const immutableErrorSetter = (controlOrGroup, error) => {
     return controlOrGroup.set('errors', List([error]));
 }
 
-export function checkValid(condition, errorMessage) {
-  return (controlOrGroup) => controlOrGroup.update(
+export function assignControlValid(group, {name}) {
+  return group.updateIn(['controls', name], (control) => (
+    control.set('valid', control.get('errors').size == 0)
+  ));
+}
+
+export function controlValidationRule(condition, errorMessage) {
+  return (group, action) =>
+    group.updateIn(['controls', action.name], (control) => (
+      validate(control, condition, errorMessage)
+    )
+  );
+}
+
+export function validate(controlOrGroup, condition, errorMessage) {
+  return controlOrGroup.update(
     'errors', (errors) => (
       condition(controlOrGroup)
       ? errors.filterNot((error) => error == errorMessage)
@@ -81,7 +134,8 @@ export function createReduxControlGroup(groupName, controls, accessor) {
       value
     });
 
-    if (actions[name].REFORMS_CONTROL_VALUE_CHANGED)
+    let controlActions = actions[name];
+    if (controlActions && controlActions.REFORMS_CONTROL_VALUE_CHANGED)
       store.dispatch(actions[name].REFORMS_CONTROL_VALUE_CHANGED(value));
   }
 

@@ -30,10 +30,8 @@ const render = () => (
       <div>
         <TextField
           label="Favorite Food"
-          id="food"
           placeholder="yum!"
-          {...getControlProps('food')}
-        />
+          {...getControlProps('food')} />
         <TextArea
           label="Explain why you like this food"
           id="explanation"
