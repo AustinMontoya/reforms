@@ -1,5 +1,10 @@
 import {Map, List} from 'immutable'
 
+export const ActionTypes = {
+  REFORMS_CONTROL_VALUE_CHANGED: 'REFORMS_CONTROL_VALUE_CHANGED',
+  REFORMS_CONTROL_SOILED: 'REFORMS_CONTROL_SOILED'
+};
+
 const initialControlState = (overrides) => Object.assign({
   valid: true,
   dirty: false,
@@ -62,23 +67,27 @@ function getDefaultControlsState(controls) {
 
 export function createReduxControlGroup(groupName, controls, accessor) {
   var store = null;
+  var actions = {};
 
   let defaultState = {
     controls: getDefaultControlsState(controls)
   };
 
-  const onValueChange = (name, value) => (
+  const onValueChange = (name, value) => {
     store.dispatch({
-      type: 'REFORMS_CONTROL_VALUE_CHANGED',
+      type: ActionTypes.REFORMS_CONTROL_VALUE_CHANGED,
       groupName,
       name,
       value
-    })
-  )
+    });
+
+    if (actions[name].REFORMS_CONTROL_VALUE_CHANGED)
+      store.dispatch(actions[name].REFORMS_CONTROL_VALUE_CHANGED(value));
+  }
 
   function onControlSoiled(name) {
     store.dispatch({
-      type: 'REFORMS_CONTROL_SOILED',
+      type: ActionTypes.REFORMS_CONTROL_SOILED,
       groupName,
       name
     })
@@ -118,6 +127,11 @@ export function createReduxControlGroup(groupName, controls, accessor) {
     }
   }
 
+  function createAction(controlName, trigger, actionCreator) {
+    actions[controlName] = actions[controlName] || {};
+    actions[controlName][trigger] = actionCreator;
+  }
+
   function connect(target) {
     store = target;
   }
@@ -126,5 +140,11 @@ export function createReduxControlGroup(groupName, controls, accessor) {
     accessor = defaultAccessor;
   }
 
-  return { getControlProps, connect, defaultState, createReducer };
+  return {
+    getControlProps,
+    connect,
+    defaultState,
+    createReducer,
+    createAction
+  };
 }

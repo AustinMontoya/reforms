@@ -37,6 +37,19 @@ function meal(state = defaultState, action) {
     case 'REFORMS_CONTROL_VALUE_CHANGED':
       state = mealControl(state, action);
       break;
+    case 'REQUEST_REMOTE_AGREEMENT_VALIDATION':
+      state = state.setIn(['controls', 'agreement', 'validating'], true);
+      break;
+    case 'RECEIVE_REMOTE_AGREEMENT_VALIDATION':
+      state = state.updateIn(['controls', 'agreement'], (control) => {
+        control = checkValid(
+          () => action.valid,
+          "Our records indicate you cannot do this."
+        )(control);
+
+        return control.set('validating', false);
+      });
+      break;
     default:
       break;
   }

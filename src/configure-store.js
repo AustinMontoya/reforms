@@ -1,9 +1,10 @@
 import { createStore, applyMiddleware, compose } from 'redux';
+import thunkMiddleware from 'redux-thunk';
 import rootReducer from './reducers';
 import DevTools from './dev-tools.jsx';
 
 const finalCreateStore = compose(
-  // Required! Enable Redux DevTools with the monitors you chose
+  applyMiddleware(thunkMiddleware),
   DevTools.instrument()
 )(createStore);
 
