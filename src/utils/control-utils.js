@@ -25,7 +25,7 @@ function getDefaultControlsState(controls) {
     return Object.keys(controls).reduce((state, name) => {
       state[name] = initialControlState(controls[name]);
       return state;
-    });
+    }, {});
   } else {
     throw Error("'controls' parameter must be an array of strings or a POJO");
   }

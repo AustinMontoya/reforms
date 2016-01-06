@@ -1,6 +1,12 @@
 import {createReduxControlGroup, immutableAccessor} from '../utils/control-utils';
 
-let controls = ['food', 'explanation', 'agreement', 'protein', 'country'];
+let controls = {
+  food: { value: 'bacon' },
+  explanation: {},
+  agreement: { errors: ['Ha! Like you really have a choice...'] },
+  protein: {},
+  country: {}
+};
 
 const {
   createReducer,
