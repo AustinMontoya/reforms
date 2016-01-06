@@ -1,6 +1,7 @@
-import {Map} from 'immutable'
+import {Map, List} from 'immutable'
 
 const initialControlState = (overrides) => Object.assign({
+  valid: true,
   dirty: false,
   value: null,
   errors: []
@@ -12,6 +13,34 @@ export function immutableAccessor(state, name) {
 
 export function defaultAccessor(state, name) {
   return state.controls[name];
+}
+
+export function flow() {
+  var funcs = arguments;
+  return function(state) {
+    let index = 0;
+    let result = funcs[index].apply(this, arguments);
+
+     while (++index < funcs.length) {
+       result = funcs[index].call(this, result);
+     }
+
+     return result;
+  }
+}
+
+const immutableErrorSetter = (controlOrGroup, error) => {
+    return controlOrGroup.set('errors', List([error]));
+}
+
+export function checkValid(condition, errorMessage) {
+  return (controlOrGroup) => controlOrGroup.update(
+    'errors', (errors) => (
+      condition(controlOrGroup)
+      ? errors.filterNot((error) => error == errorMessage)
+      : errors.push(errorMessage)
+    )
+  );
 }
 
 function getDefaultControlsState(controls) {
