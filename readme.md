@@ -23,14 +23,27 @@ What this is leading towards:
 - Stateless (or "controlled") form components increase flexibility by making fewer assumptions
   - They are also easier to understand and implement
   - Things like datepicker might be an exception (would you want to push managing picker visibility out of the component itself??)
-- App state and view state should be two different things
 - Validation should happen at the form level in a single function, ideally not tied to any component directly
 - Reusability in validation rules should come from pure, composable functions, not configurable / extensible objects
 
 Things to figure out:
 
-- Updating view state without being tied to a component or framework
-- Updating application state separately from view state
-- How to deal with nested controls
-- Mixins for easy use with vanilla react
-- Redux integration in the form of reusable reducer functions
+- Nested groups
+- Multiple groups
+- `actions --> group <-- reducers` is a weird relationship (but just another level of indirection)
+- how does group integrate with store (does it need to)?
+- reselect integration
+- react-redux integration
+- Form reset
+- Not using a string for tying a reducer / component to a group
+- Is `validating` "standard"?
+- Is `submitting` "standard"?
+
+
+Things that might be nice:
+
+- Remove dependency on immutable js
+- pre-built higher order components?
+- Store state on react component (or anything??)
+- Undo / Redo
+- Snapshotting
