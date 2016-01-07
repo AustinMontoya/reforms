@@ -21,6 +21,7 @@ function requestRemoteAgreementValidation(value) {
   return {
     type: REQUEST_REMOTE_AGREEMENT_VALIDATION,
     groupName: 'meals',
+    name: 'agreement',
     value
   };
 }
@@ -30,6 +31,7 @@ function receiveRemoteAgreementValidation(valid) {
   return {
     type: RECEIVE_REMOTE_AGREEMENT_VALIDATION,
     groupName: 'meals',
+    name: 'agreement',
     valid
   };
 }
@@ -37,7 +39,7 @@ function receiveRemoteAgreementValidation(valid) {
 createAction('agreement', ActionTypes.REFORMS_CONTROL_VALUE_CHANGED, (value) => {
   return (dispatch) => {
     dispatch(requestRemoteAgreementValidation(value));
-    setTimeout(() => dispatch(receiveRemoteAgreementValidation(false)));
+    setTimeout(() => dispatch(receiveRemoteAgreementValidation(true)));
   };
 });
 

@@ -31,7 +31,7 @@ export function chainReducers() {
   }
 }
 
-export function createControlsReducer(controlsMap, actionType = ActionTypes.REFORMS_CONTROL_VALUE_CHANGED) {
+export function createControlsReducer(controlsMap = {}, actionType = ActionTypes.REFORMS_CONTROL_VALUE_CHANGED) {
   return (state, action) => {
     if (action.type !== actionType)
       return state;
@@ -40,6 +40,21 @@ export function createControlsReducer(controlsMap, actionType = ActionTypes.REFO
       return assignControlValue(state, action);
 
     return controlsMap[action.name](state, action);
+  }
+}
+
+export function createControlsValidationReducer(controlsMap = {}, actionType = ActionTypes.REFORMS_CONTROL_VALUE_CHANGED) {
+  return (group, action) => {
+    if (action.type !== actionType)
+      return group;
+
+    return Object.keys(controlsMap).reduce((group, controlName) => {
+      let newAction = Object.assign({}, action, {name: controlName});
+      if (controlsMap[controlName])
+        group = controlsMap[controlName](group, newAction);
+
+      return assignControlValid(group, newAction);
+    }, group);
   }
 }
 
@@ -86,18 +101,17 @@ export function assignControlValid(group, {name}) {
 export function controlValidationRule(condition, errorMessage) {
   return (group, action) =>
     group.updateIn(['controls', action.name], (control) => (
-      validate(control, condition, errorMessage)
+      validate(control, condition(control), errorMessage)
     )
   );
 }
 
-export function validate(controlOrGroup, condition, errorMessage) {
+export function validate(controlOrGroup, valid, errorMessage) {
   return controlOrGroup.update(
-    'errors', (errors) => (
-      condition(controlOrGroup)
-      ? errors.filterNot((error) => error == errorMessage)
-      : errors.push(errorMessage)
-    )
+    'errors', (errors) => {
+      errors = errors.filterNot((error) => error == errorMessage)
+      return valid ? errors : errors.push(errorMessage);
+    }
   );
 }
 
@@ -123,7 +137,10 @@ export function createReduxControlGroup(groupName, controls, accessor) {
   var actions = {};
 
   let defaultState = {
-    controls: getDefaultControlsState(controls)
+    controls: getDefaultControlsState(controls),
+    errors: [],
+    dirty: false,
+    valid: true
   };
 
   const onValueChange = (name, value) => {
