@@ -70,17 +70,6 @@ function countryProtein(group, action) {
   );
 }
 
-function mealForm(group, action) {
-  switch (action.type) {
-    case 'REQUEST_MEAL_PROCESSED':
-      return group.set('submitting', true);
-    case 'RECEIVE_MEAL_PROCESSED_RESPONSE':
-      return group.set('submitting', false).set('dirty', false);
-    default:
-      return group;
-  }
-}
-
 const reduce = createReducer(chainReducers(
   fieldReducer,
   validationReducer,
@@ -89,4 +78,4 @@ const reduce = createReducer(chainReducers(
   form
 ));
 
-export default chainReducers(reduce, mealForm);
+export default chainReducers(reduce);

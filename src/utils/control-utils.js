@@ -2,7 +2,9 @@ import {Map, List} from 'immutable'
 
 export const ActionTypes = {
   REFORMS_CONTROL_VALUE_CHANGED: 'REFORMS_CONTROL_VALUE_CHANGED',
-  REFORMS_CONTROL_SOILED: 'REFORMS_CONTROL_SOILED'
+  REFORMS_CONTROL_SOILED: 'REFORMS_CONTROL_SOILED',
+  REFORMS_BEGIN_SUBMISSION: 'REFORMS_BEGIN_SUBMISSION',
+  REFORMS_END_SUBMISSION: 'REFORMS_END_SUBMISSION'
 };
 
 const initialControlState = (overrides) => Object.assign({
@@ -68,6 +70,10 @@ export function form(group, action) {
     case ActionTypes.REFORMS_CONTROL_VALUE_CHANGED:
       group = group.set('dirty', true);
       return group;
+    case ActionTypes.REFORMS_BEGIN_SUBMISSION:
+      return group.set('submitting', true);
+    case ActionTypes.REFORMS_END_SUBMISSION:
+      return group.set('submitting', false);
     default:
       return group;
   }

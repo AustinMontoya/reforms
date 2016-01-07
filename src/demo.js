@@ -75,18 +75,7 @@ const render = () => (
            && store.getState().get('dirty')
            && !store.getState().get('submitting')
          }
-         onSelected={() => {
-          store.dispatch((dispatch) => {
-            dispatch({
-              type: 'REQUEST_MEAL_PROCESSED'
-            });
-
-            setTimeout(() => dispatch({
-              type: 'RECEIVE_MEAL_PROCESSED_RESPONSE',
-              success: true
-            }), 2000);
-          })
-         }}
+         onSelected={() => store.dispatch(mealGroup.saveMeal())}
         >
           Submit
          </FormAction>

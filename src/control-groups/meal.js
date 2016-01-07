@@ -36,6 +36,21 @@ function receiveRemoteAgreementValidation(valid) {
   };
 }
 
+function saveMeal() {
+  return (dispatch) => {
+    dispatch({
+      type: ActionTypes.REFORMS_BEGIN_SUBMISSION,
+      groupName: 'meals'
+    });
+
+    setTimeout(() => dispatch({
+      type: ActionTypes.REFORMS_END_SUBMISSION,
+      groupName: 'meals',
+      success: true
+    }), 2000);
+  }
+}
+
 createAction('agreement', ActionTypes.REFORMS_CONTROL_VALUE_CHANGED, (value) => {
   return (dispatch) => {
     dispatch(requestRemoteAgreementValidation(value));
@@ -47,5 +62,6 @@ export {
   createReducer,
   defaultState,
   connect,
-  getControlProps
+  getControlProps,
+  saveMeal
 };
