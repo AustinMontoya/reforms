@@ -140,7 +140,8 @@ export function createReduxControlGroup(groupName, controls, accessor) {
     controls: getDefaultControlsState(controls),
     errors: [],
     dirty: false,
-    valid: true
+    valid: true,
+    submitting: false
   };
 
   const onValueChange = (name, value) => {

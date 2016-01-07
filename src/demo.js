@@ -24,6 +24,24 @@ const countries = [
   { displayText: "'Murica", value: "US" }
 ];
 
+const FormActions = (props) => (
+  <div className='reforms-form-actions'>
+    {props.children}
+  </div>
+);
+
+const FormAction = (props) => {
+  let className = `reforms-form-action reforms-form-action-${props.type}`;
+  return (
+    <button
+      disabled={!props.enabled}
+      className={className}
+      onClick={props.onSelected} >
+      {props.children}
+    </button>
+  );
+}
+
 const render = () => (
   ReactDOM.render(
     <div>
@@ -49,6 +67,30 @@ const render = () => (
           options={countries}
           {...getControlProps('country')} />
        </div>
+       <FormActions>
+        <FormAction
+         type="primary"
+         enabled={
+           store.getState().get('valid')
+           && store.getState().get('dirty')
+           && !store.getState().get('submitting')
+         }
+         onSelected={() => {
+          store.dispatch((dispatch) => {
+            dispatch({
+              type: 'REQUEST_MEAL_PROCESSED'
+            });
+
+            setTimeout(() => dispatch({
+              type: 'RECEIVE_MEAL_PROCESSED_RESPONSE',
+              success: true
+            }), 2000);
+          })
+         }}
+        >
+          Submit
+         </FormAction>
+       </FormActions>
        <DevTools store={store} />
       </div>
   , appContainer)
